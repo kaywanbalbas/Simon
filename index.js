@@ -2,6 +2,7 @@ var gamePattern = [];
 var userClickedPattern = [];
 var buttonColours = ["red", "blue", "green", "yellow"];
 var level = 0;
+var started = false;
 
 function nextSequence() {
   var randomNumber = Math.floor(Math.random() * 4);
@@ -17,20 +18,25 @@ function nextSequence() {
 }
 
 //detect when a keyboard key has been pressed for the first time
-$("body").one("keypress", function() {
-  nextSequence();
+
+$("body").keypress(function() {
+  if (started === false) {
+    started = true;
+    nextSequence();
+  }
 });
 
 $(".btn").click(function() {
-  var userChosenColour = this.id;
-  userClickedPattern.push(userChosenColour);
-  console.log("userClickedPattern = "+userClickedPattern);
+  if(started === true) {
+    var userChosenColour = this.id;
+    userClickedPattern.push(userChosenColour);
+    console.log("userClickedPattern = "+userClickedPattern);
 
-  playSound(userChosenColour);
-  animatePress(userChosenColour);
+    playSound(userChosenColour);
+    animatePress(userChosenColour);
 
-  var lastIndex = (userClickedPattern.length) - 1;
-  checkAnswer(lastIndex);
+    checkAnswer((userClickedPattern.length) - 1);
+  }
 });
 
 function playSound(name) {
@@ -62,5 +68,13 @@ function checkAnswer(currentLevel) {
     $("body").addClass("game-over");
     setTimeout(function() {$("body").removeClass("game-over")}, 200);
     $("#level-title").html("Game Over, Press Any Key to Restart");
+    startOver();
   }
+}
+
+function startOver() {
+  level = 0;
+  gamePattern = [];
+  userClickedPattern = [];
+  started = false;
 }
