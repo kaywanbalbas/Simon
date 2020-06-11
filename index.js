@@ -17,14 +17,15 @@ function nextSequence() {
   playSound(randomChosenColour);
 }
 
-//detect when a keyboard key has been pressed for the first time
-
-$("body").keypress(function() {
+function firstRound() {
   if (started === false) {
     started = true;
     nextSequence();
   }
-});
+}
+//detect when a keyboard key or h1 element has been pressed for the first time
+$("body").on("keypress", firstRound);
+$("h1").on("click", firstRound);
 
 $(".btn").click(function() {
   var userChosenColour = this.id;
